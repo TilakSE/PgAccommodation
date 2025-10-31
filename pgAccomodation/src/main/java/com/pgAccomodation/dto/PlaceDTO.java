@@ -1,75 +1,49 @@
-package com.pgAccomodation.entity;
+package com.pgAccomodation.dto;
 
-import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-@Entity
-@Table(name = "accommodation")
-public class Accommodation {
+public class PlaceDTO {
     
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @NotBlank(message = "Registration number is required")
-    @Column(name = "registration_number", unique = true, nullable = false)
     private String registrationNumber;
     
     @NotBlank(message = "Place name is required")
-    @Column(name = "place_name", nullable = false)
     private String placeName;
     
     @NotNull(message = "Built-up area is required")
     @Min(value = 1, message = "Built-up area must be greater than 0")
-    @Column(name = "built_up_area", nullable = false)
-    private Double builtUpArea; // in sq ft
+    private Double builtUpArea;
     
     @NotNull(message = "Rent amount is required")
     @Min(value = 1, message = "Rent must be greater than 0")
-    @Column(name = "rent", nullable = false)
     private Double rent;
     
-    @Column(columnDefinition = "TEXT")
     private String description;
     
     @NotNull(message = "Availability status is required")
-    @Column(nullable = false)
-    private Boolean available = true; // true = available, false = occupied
+    private Boolean available;
     
-    @Column(name = "visitor_count")
-    private Long visitorCount = 0L;
+    private Long visitorCount;
     
-    @Column(name = "city", nullable = false)
+    @NotBlank(message = "City is required")
     private String city;
     
-    @Column(name = "locality", nullable = false)
+    @NotBlank(message = "Locality is required")
     private String locality;
     
-    @Column(name = "address", length = 500)
     private String address;
     
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    @JsonBackReference
-    private Owner owner;
+    @NotNull(message = "Owner ID is required")
+    private Long ownerId;
     
     // Constructors
-    public Accommodation() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public Accommodation(Long id, String registrationNumber, String placeName, Double builtUpArea, 
-                         Double rent, String description, Boolean available, Long visitorCount, 
-                         String city, String locality, String address, Owner owner) {
+    public PlaceDTO() {}
+    
+    public PlaceDTO(Long id, String registrationNumber, String placeName, Double builtUpArea, 
+                    Double rent, String description, Boolean available, Long visitorCount, 
+                    String city, String locality, String address, Long ownerId) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.placeName = placeName;
@@ -81,23 +55,9 @@ public class Accommodation {
         this.city = city;
         this.locality = locality;
         this.address = address;
-        this.owner = owner;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        this.ownerId = ownerId;
     }
     
-    // Lifecycle callbacks
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     // Getters and Setters
     public Long getId() {
         return id;
@@ -187,36 +147,11 @@ public class Accommodation {
         this.address = address;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Owner getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Owner owner) {
-        this.owner = owner;
-    }
-
-    @Override
-    public String toString() {
-        return "Accommodation [id=" + id + ", registrationNumber=" + registrationNumber + 
-               ", placeName=" + placeName + ", builtUpArea=" + builtUpArea + ", rent=" + rent + 
-               ", description=" + description + ", available=" + available + 
-               ", visitorCount=" + visitorCount + ", city=" + city + ", locality=" + locality + 
-               ", address=" + address + "]";
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

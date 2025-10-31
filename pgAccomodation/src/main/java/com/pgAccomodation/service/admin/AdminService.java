@@ -1,5 +1,13 @@
 package com.pgAccomodation.service.admin;
 
-public interface AdminService {
+import com.pgAccomodation.entity.Admin;
+import java.util.List;
 
+public interface AdminService {
+    
+    Admin findAdminById(Long id);
+    
+    Admin findAdminByUsername(String username);
+    
+    List<Admin> getAllAdmins();
 }
